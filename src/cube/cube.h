@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef CUBE_H
 #define CUBE_H
 
@@ -50,5 +52,7 @@ enum {
 extern const sticker_color_t SOLVED_CUBE[CUBE_ARRAY_LEN];
 
 void print_cube(sticker_color_t cube[CUBE_ARRAY_LEN]);
+
+bool is_cube_solved(sticker_color_t cube[CUBE_ARRAY_LEN]);
 
 #endif

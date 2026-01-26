@@ -1,5 +1,7 @@
 #include "cube.h"
 #include "stdio.h"
+#include <stdbool.h>
+#include <string.h>
 
 // clang-format off
 const sticker_color_t SOLVED_CUBE[CUBE_ARRAY_LEN] = {
@@ -47,4 +49,8 @@ void print_cube(sticker_color_t cube[CUBE_ARRAY_LEN]) {
     }
   }
   printf("\n");
+}
+
+bool is_cube_solved(sticker_color_t cube[CUBE_ARRAY_LEN]) {
+  memcmp(cube, SOLVED_CUBE, CUBE_ARRAY_LEN * sizeof(sticker_color_t)) == 0;
 }
