@@ -1,18 +1,21 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifndef CUBE_H
 #define CUBE_H
 
 #define CUBE_ARRAY_LEN 24
 
-typedef enum {
+enum {
   YELLOW,
   WHITE,
   BLUE,
   GREEN,
   RED,
   ORANGE
-} sticker_color_t;
+};
+
+typedef uint8_t sticker_color_t;
 
 // clang-format off
 enum {

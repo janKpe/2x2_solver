@@ -52,5 +52,5 @@ void print_cube(sticker_color_t cube[CUBE_ARRAY_LEN]) {
 }
 
 bool is_cube_solved(sticker_color_t cube[CUBE_ARRAY_LEN]) {
-  memcmp(cube, SOLVED_CUBE, CUBE_ARRAY_LEN * sizeof(sticker_color_t)) == 0;
+  return memcmp(cube, SOLVED_CUBE, CUBE_ARRAY_LEN * sizeof(sticker_color_t)) == 0;
 }
