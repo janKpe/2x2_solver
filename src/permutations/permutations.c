@@ -422,3 +422,199 @@ void apply_move(sticker_color_t cube[CUBE_ARRAY_LEN], permutation move) {
             break;
     }
 }
+
+
+const char* perm_name(permutation p) {
+  switch (p) {
+    case PERM_NONE:    return "NONE";
+    case PERM_R:       return "R";
+    case PERM_R_PRIME: return "R'";
+    case PERM_R2:      return "R2";
+    case PERM_L:       return "L";
+    case PERM_L_PRIME: return "L'";
+    case PERM_L2:      return "L2";
+    case PERM_U:       return "U";
+    case PERM_U_PRIME: return "U'";
+    case PERM_U2:      return "U2";
+    case PERM_D:       return "D";
+    case PERM_D_PRIME: return "D'";
+    case PERM_D2:      return "D2";
+    case PERM_F:       return "F";
+    case PERM_F_PRIME: return "F'";
+    case PERM_F2:      return "F2";
+    case PERM_B:       return "B";
+    case PERM_B_PRIME: return "B'";
+    case PERM_B2:      return "B2";
+    default:           return "?";
+  }
+}
+
+permutation perm_opposite(permutation p) {
+    switch (p) {
+    case PERM_R:       return PERM_R_PRIME;
+    case PERM_R_PRIME: return PERM_R;
+    case PERM_R2:      return PERM_R2;
+    case PERM_L:       return PERM_L_PRIME;
+    case PERM_L_PRIME: return PERM_L;
+    case PERM_L2:      return PERM_L2;
+    case PERM_U:       return PERM_U_PRIME;
+    case PERM_U_PRIME: return PERM_U;
+    case PERM_U2:      return PERM_U2;
+    case PERM_D:       return PERM_D_PRIME;
+    case PERM_D_PRIME: return PERM_D;
+    case PERM_D2:      return PERM_D2;
+    case PERM_F:       return PERM_F_PRIME;
+    case PERM_F_PRIME: return PERM_F;
+    case PERM_F2:      return PERM_F2;
+    case PERM_B:       return PERM_B_PRIME;
+    case PERM_B_PRIME: return PERM_B;
+    case PERM_B2:      return PERM_B2;
+    default:           return PERM_NONE;
+  }
+}
+
+bool perm_same(permutation p1, permutation p2) {
+    switch (p1) {
+        case PERM_R2:
+        case PERM_R_PRIME:
+        case PERM_R:
+            switch (p2) {
+                case PERM_R2:
+                case PERM_R_PRIME:
+                case PERM_R:
+                    return true;
+                default:
+                    return false;
+            }
+        case PERM_L2:
+        case PERM_L_PRIME:
+        case PERM_L:
+            switch (p2) {
+                case PERM_L2:
+                case PERM_L_PRIME:
+                case PERM_L:
+                    return true;
+                default:
+                    return false;
+            }
+        case PERM_U2:
+        case PERM_U_PRIME:
+        case PERM_U:
+            switch (p2) {
+                case PERM_U2:
+                case PERM_U_PRIME:
+                case PERM_U:
+                    return true;
+                default:
+                    return false;
+            }
+        case PERM_D2:
+        case PERM_D_PRIME:
+        case PERM_D:
+            switch (p2) {
+                case PERM_D2:
+                case PERM_D_PRIME:
+                case PERM_D:
+                    return true;
+                default:
+                    return false;
+            }
+        case PERM_F2:
+        case PERM_F_PRIME:
+        case PERM_F:
+            switch (p2) {
+                case PERM_F2:
+                case PERM_F_PRIME:
+                case PERM_F:
+                    return true;
+                default:
+                    return false;
+            }
+        case PERM_B2:
+        case PERM_B_PRIME:
+        case PERM_B:
+            switch (p2) {
+                case PERM_B2:
+                case PERM_B_PRIME:
+                case PERM_B:
+                    return true;
+                default:
+                    return false;
+            }
+        default:
+            return false;
+    }
+}
+
+bool perm_opp_side(permutation p1, permutation p2) {
+        switch (p1) {
+        case PERM_R2:
+        case PERM_R_PRIME:
+        case PERM_R:
+        switch (p2) {
+            case PERM_L2:
+            case PERM_L_PRIME:
+            case PERM_L:
+                return true;
+            default:
+                return false;
+        }
+        case PERM_L2:
+        case PERM_L_PRIME:
+        case PERM_L:
+        switch (p2) {
+            case PERM_R2:
+            case PERM_R_PRIME:
+            case PERM_R:
+                return true;
+            default:
+                return false;
+        }
+        case PERM_U2:
+        case PERM_U_PRIME:
+        case PERM_U:
+        switch (p2) {
+            case PERM_D2:
+            case PERM_D_PRIME:
+            case PERM_D:
+                return true;
+            default:
+                return false;
+        }
+        case PERM_D2:
+        case PERM_D_PRIME:
+        case PERM_D:
+        switch (p2) {
+            case PERM_U2:
+            case PERM_U_PRIME:
+            case PERM_U:
+                return true;
+            default:
+                return false;
+        }
+        case PERM_F2:
+        case PERM_F_PRIME:
+        case PERM_F:
+        switch (p2) {
+            case PERM_B2:
+            case PERM_B_PRIME:
+            case PERM_B:
+                return true;
+            default:
+                return false;
+        }
+        case PERM_B2:
+        case PERM_B_PRIME:
+        case PERM_B:
+            switch (p2) {
+                case PERM_F2:
+                case PERM_F_PRIME:
+                case PERM_F:
+                    return true;
+                default:
+                    return false;
+            }
+        default:
+            return false;
+    }
+}
