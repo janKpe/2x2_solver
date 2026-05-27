@@ -10,6 +10,7 @@ add_executable(${EXECUTABLE_NAME}
     src/main.c
     src/permutations/permutations.c
     src/cube/cube.c
+    src/solving/solving.c
 )
 
 target_link_libraries(${EXECUTABLE_NAME} data-structures)
