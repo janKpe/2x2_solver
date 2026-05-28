@@ -285,8 +285,8 @@ void apply_move(sticker_color_t cube[CUBE_ARRAY_LEN], permutation move) {
             temp1 = cube[U2];
             temp2 = cube[U3];
 
-            cube[U2] = cube[L1];
-            cube[U3] = cube[L3];
+            cube[U2] = cube[L3];
+            cube[U3] = cube[L1];
 
             cube[L1] = cube[D0];
             cube[L3] = cube[D1];
@@ -336,11 +336,11 @@ void apply_move(sticker_color_t cube[CUBE_ARRAY_LEN], permutation move) {
             cube[D0] = temp;
 
             temp = cube[L1];
-            cube[L1] = cube[R0];
-            cube[R0] = temp;
-            temp = cube[L3];
-            cube[L3] = cube[R2];
+            cube[L1] = cube[R2];
             cube[R2] = temp;
+            temp = cube[L3];
+            cube[L3] = cube[R0];
+            cube[R0] = temp;
 
             temp = cube[F0];
             cube[F0] = cube[F3];
