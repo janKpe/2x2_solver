@@ -171,4 +171,3 @@ void solve_cube(sticker_color_t unsolved_cube[CUBE_ARRAY_LEN], permutation solut
     ll_queue_free(solved_bfs_q);
     ll_queue_free(unsolved_bfs_q);
 }
-

@@ -1,4 +1,3 @@
-#include "../libs/data-structures/vector/vector.h"
 #include "cube/cube.h"
 #include "permutations/permutations.h"
 #include "stdio.h"
@@ -18,8 +17,6 @@ int main() {
   apply_move(testCube, PERM_F2);
   apply_move(testCube, PERM_R2);
   apply_move(testCube, PERM_U_PRIME);
-
-
 
   permutation solution[SOLUTION_ARR_SIZE] = {0};
   solve_cube(testCube, solution);

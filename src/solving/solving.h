@@ -1,5 +1,3 @@
-#include "../cube/cube.h"
-#include "string.h"
 #include "../permutations/permutations.h"
 
 #ifndef SOLVING_H
