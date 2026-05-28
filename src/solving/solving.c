@@ -8,24 +8,34 @@
 #include <stdint.h>
 #include <stdio.h>
 
-static hash_value_t cube_hash(void const* ptr) {  
-  if (!ptr) {  
-    return 0;  
-  }  
-  
-  const uint64_t* my_val = (const uint64_t*)ptr;  
-  hash_value_t h = 14695981039346656037ULL;  
-  const hash_value_t prime = 1099511628211ULL;
-  
-  h ^= (hash_value_t)my_val[0];  
-  h *= prime;  
-  h ^= (hash_value_t)my_val[1];  
-  h *= prime;  
-  h ^= (hash_value_t)my_val[2];  
-  h *= prime;  
-  
-  return h;  
-}  
+static hash_value_t cube_hash(void const* ptr) {
+  if (!ptr) {
+    return 0;
+  }
+
+  const uint64_t* v = (const uint64_t*)ptr;
+  const uint64_t c1 = 0x87c37b91114253d5ULL;
+  const uint64_t c2 = 0x4cf5ad432745937fULL;
+
+  uint64_t h = 0;
+  for (int i = 0; i < 3; i++) {
+    uint64_t k = v[i] * c1;
+    k = (k << 31) | (k >> 33);
+    k *= c2;
+    h ^= k;
+    h = (h << 27) | (h >> 37);
+    h = h * 5 + 0x52dce729ULL;
+  }
+
+  // Final avalanche mix
+  h ^= h >> 33;
+  h *= 0xff51afd7ed558ccdULL;
+  h ^= h >> 33;
+  h *= 0xc4ceb9fe1a85ec53ULL;
+  h ^= h >> 33;
+
+  return h;
+}
 
 static bool cube_eq(void const* p1, void const* p2) {  
   if (!p1 || !p2) {  
