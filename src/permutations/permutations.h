@@ -3,7 +3,7 @@
 #ifndef PERMUTATIONS_H
 #define PERMUTATIONS_H
 
-typedef enum {
+enum {
     PERM_NONE,
     PERM_R,
     PERM_R_PRIME,
@@ -24,7 +24,9 @@ typedef enum {
     PERM_B_PRIME,
     PERM_B2,
     PERM_COUNT,
-} permutation;
+};
+
+typedef uint16_t permutation;
 
 void apply_move(sticker_color_t cube[CUBE_ARRAY_LEN], permutation move);
 
