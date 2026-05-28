@@ -63,6 +63,41 @@ static size_t count_perm_arr(permutation arr[PERM_ARR_SIZE]) {
   exit(2);
 }
 
+static inline void queue_neighbourghs(permutation path[PERM_ARR_SIZE], ll_queue *queue) {
+  size_t arr_len = count_perm_arr(path);
+  permutation perm_buffer[PERM_ARR_SIZE];
+  memmove(perm_buffer, path, sizeof(permutation) * PERM_ARR_SIZE);
+  for (size_t i = 0; i < PERM_COUNT; i++) {
+    if (i == PERM_NONE) {
+      continue;
+    }
+    if (arr_len > 0 && perm_same(path[arr_len - 1], i)) {
+      continue;
+    }
+    if (arr_len > 1 && perm_opp_side(path[arr_len - 1], i)) {
+      continue;
+    }
+    // append the neighbourgh move to the current path and queue it
+    perm_buffer[arr_len] = i;
+    ll_queue_enqueue(queue, perm_buffer);
+  }
+}
+
+static void write_solution(permutation *from_unsolved,
+                    permutation *from_solved, permutation dst[SOLUTION_ARR_SIZE]) {
+  size_t unsolved_path_len = count_perm_arr(from_unsolved);
+  for (size_t i = 0; i < unsolved_path_len; i++) {
+    dst[i] = from_unsolved[i];
+  }
+
+  // reverse the path from the unsolved cube to the state where it meets with the solved path
+  size_t solved_path_len = count_perm_arr(from_solved);
+  for (size_t j = solved_path_len; j > 0; j--) {
+    dst[unsolved_path_len + solved_path_len - j] =
+        perm_opposite(from_solved[j - 1]);
+  }
+}
+
 void solve_cube(sticker_color_t unsolved_cube[CUBE_ARRAY_LEN], permutation solution[SOLUTION_ARR_SIZE]) {
   hashmap* solved_bfs_m;
   hashmap_init(sizeof(sticker_color_t) * CUBE_ARRAY_LEN, sizeof(permutation) * PERM_ARR_SIZE, cube_hash, cube_eq, &solved_bfs_m);
@@ -95,41 +130,16 @@ void solve_cube(sticker_color_t unsolved_cube[CUBE_ARRAY_LEN], permutation solut
   
       permutation* unsolved_bfs_solution;
       if (hashmap_get(unsolved_bfs_m, cube, (void**)&unsolved_bfs_solution)) {
-        size_t unsolved_path_len = count_perm_arr(unsolved_bfs_solution);
-        for (size_t i = 0; i < unsolved_path_len; i++) {
-          solution[i] = unsolved_bfs_solution[i];
-        }
-  
-        size_t solved_path_len = count_perm_arr(solved_bfs_i);
-        for (size_t j = solved_path_len; j > 0; j--) {
-          solution[unsolved_path_len + solved_path_len - j] = perm_opposite(solved_bfs_i[j -1]);
-        }
-  
-        hashmap_free(unsolved_bfs_m);
-        hashmap_free(solved_bfs_m);
-        ll_queue_free(solved_bfs_q);
-        ll_queue_free(unsolved_bfs_q);
-        return;
+        write_solution(unsolved_bfs_solution, solved_bfs_i, solution);
+
+        free(solved_bfs_i);
+        goto free_maps_and_q;
       }
-  
-      size_t arr_len = count_perm_arr(solved_bfs_i);
-      permutation perm_buffer[PERM_ARR_SIZE];
-      memmove(perm_buffer, solved_bfs_i, sizeof(permutation) * PERM_ARR_SIZE);
-      for (size_t i = 0; i < PERM_COUNT; i++) {
-        if (i == PERM_NONE || perm_same(solved_bfs_i[arr_len-1], i)) {
-          continue;
-        }
-        if (arr_len > 1 && perm_opp_side(solved_bfs_i[arr_len - 1], i)) {
-          continue;
-        }
-        // append the neighbourgh move to the current path
-        perm_buffer[arr_len] = i;
-        ll_queue_enqueue(solved_bfs_q, perm_buffer);
-      }
+
+      queue_neighbourghs(solved_bfs_i, solved_bfs_q);
     }
     
-    
-    // now do everithing from above but from the other side of the graph
+    // do everything from above but from the other side of the graph
     permutation* unsolved_bfs_i = ll_queue_peek_copy(unsolved_bfs_q);
     ll_queue_dequeue(unsolved_bfs_q);
     
@@ -141,40 +151,24 @@ void solve_cube(sticker_color_t unsolved_cube[CUBE_ARRAY_LEN], permutation solut
   
       permutation* solved_bfs_solution;
       if (hashmap_get(solved_bfs_m, cube, (void**)&solved_bfs_solution)) {
-        size_t unsolved_path_len = count_perm_arr(unsolved_bfs_i);
-        for (size_t i = 0; i < unsolved_path_len; i++) {
-          solution[i] = unsolved_bfs_i[i];
-        }
-        
-        size_t solved_path_len = count_perm_arr(solved_bfs_solution);
-        for (size_t j = solved_path_len; j > 0 ; j--) {
-          solution[unsolved_path_len + solved_path_len - j] = perm_opposite(solved_bfs_solution[j -1]);
-        }
-  
-        hashmap_free(unsolved_bfs_m);
-        hashmap_free(solved_bfs_m);
-        ll_queue_free(solved_bfs_q);
-        ll_queue_free(unsolved_bfs_q);
-        return;
+        write_solution(unsolved_bfs_i, solved_bfs_solution, solution);
+
+        free(unsolved_bfs_i);
+        free(solved_bfs_i);
+        goto free_maps_and_q;
       }
   
-      size_t arr_len = count_perm_arr(unsolved_bfs_i);
-      permutation perm_buffer[PERM_ARR_SIZE];
-      memmove(perm_buffer, unsolved_bfs_i, sizeof(permutation) * PERM_ARR_SIZE);
-      for (size_t i = 0; i < PERM_COUNT; i++) {
-        if (i == PERM_NONE || perm_same(unsolved_bfs_i[arr_len-1], i)) {
-          continue;
-        }
-        if (arr_len > 1 && perm_opp_side(unsolved_bfs_i[arr_len - 1], i)) {
-          continue;
-        }
-        // append the neighbourgh move to the current path
-        perm_buffer[arr_len] = i;
-        ll_queue_enqueue(unsolved_bfs_q, perm_buffer);
-      }
+      queue_neighbourghs(unsolved_bfs_i, unsolved_bfs_q);
     }
 
     free(unsolved_bfs_i);
     free(solved_bfs_i);
   }
+
+  free_maps_and_q:
+    hashmap_free(unsolved_bfs_m);
+    hashmap_free(solved_bfs_m);
+    ll_queue_free(solved_bfs_q);
+    ll_queue_free(unsolved_bfs_q);
 }
+
